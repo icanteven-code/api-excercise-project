@@ -47,7 +47,7 @@ tags    { STRING ARRAY }
 
 ## Tasks / Stories
 
-### [Epic] Home page    🛍️
+### Home page    🛍️
 In this "epic" we will be working on the initial state of our catalog page - listing our products with all the basic information for our app.
 
 
@@ -133,7 +133,7 @@ Often we would like to give a promotional price for a specific product, that's w
 <br/>
 
 
-### [Epic] Sorting  🔽
+### Sorting  🔽
 After we have provided our products to the page, now we want to be able to work with them a little bit easier - sorting their order by their name, release, price, etc.
 
 
@@ -200,7 +200,7 @@ As we support 2 types of prices `price` & `promoPrice` when you're sorting, if a
 <br/>
 
 
-### [Epic] Categories   🏷️
+### Categories   🏷️
 Usually in shops we can gather products and this is done via a category - we will be using this later on for filtering, grouping, etc. To be able to wok with the categories in the best way possible we'll create a new object and endpoint for them, after which we will connect them with our products.
 
 #### 08 Categories - Create a category
@@ -250,7 +250,7 @@ As a user I want to be able to filter and see product only assigned to a specifi
 <br/>
 
 
-### [Epic] Tags   🔖
+### Tags   🔖
 Another feature we want to add to our products are tags - think of them as the hashtags of a social platform. The tags are just text-strings, that are open to the user to add and change. We don't have any requirements for them, they're just a set of words, selected and set to a product.
 
 #### 11 Tags - Add a tag field to product
@@ -298,9 +298,62 @@ After we have added tags to our products now we want to use them and filter our 
 <br/>
 
 
-### [Epic] Search   🔖
+### Search   🔖
+We have currently the opportunity to narrow down our search through the products, but what if we want to seach by something specific? That's why we're implementing a search functionality
+
+#### 12 Tags - Searching
+**Description**
+Your `GET /products` should handle a new query parameter called `search` and will contain a text-string - you need to query the names of your products by this text-string, here [MongoDB: Query for Words](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/read-operations/text/#query-for-words) you can find a good example of this behaviour. The `search` should have a value of at least 3 characters long and it can contain a single or multiple words. This new query parameter has to work with the rest of our queries like `category`, `tag` and `sort`.
+
+**Acceptance Criteria**
+- `GET /products` should accept a new query parameter `search`
+  - has to be at least 3 characters long
+  - has to return all products, that have an occurence of the search-string in their name
+  - has to work with the other queries
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+### Pagination  🔖
 <!-- ToDo -->
+#### 13 Pagination
+**Description**
+Often you will work with way too many items, lets say over 1000 products - does it makes sense to send all of them as a response? Almost definetely not, that's why we should implement a pagination logic. You need to restructure your `GET /products` and return an additional object containing info about the current payload
 
+```
+page: { INTEGER } - the current page we're at
+size: { INTEGER } - the size of the payload, how many items we're sending
+totalPages: { INTEGER } - the total count of pages, this number depends on the selected `size`
+```
+
+`page` and `size` should come from the application as query parameters, which you need to parse in your server and send back data for them. The `size` is predefined and can be one of these values - `10`, `20`, `50`. The default value for the `size` is `10`, if none is provided as query parameter and for `page` it's `1`.
+
+Currently our payload is a simple array of products and there's no available place to add this object, that's why we need to reconstruct the whole payload for our `GET /products` like
+
+```
+{
+    data: [
+        ... products
+    ],
+    pagination:{
+        page: 1,
+        size: 10,
+        totalPages: 3
+    }
+}
+```
+
+
+**Acceptance Criteria**
+- `GET /products` should accept a new query parameter `page` & `size`
+- Rework the payload to return an object `{ data: [ ... ], pagination: { page:1, size:10, totalPages:2 } }`
+- Both `page` and `size` have a default values if nothing is set as a query parameter
+- The paginaton works with the rest of the filtering and sorting
 
 <br/>
 <br/>
@@ -308,17 +361,7 @@ After we have added tags to our products now we want to use them and filter our 
 <br/>
 
 
-### [Epic] Create a product view   🔖
-<!-- ToDo -->
-
-
-<br/>
-<br/>
-<br/>
-<br/>
-
-
-### [Epic] Edit a product view   🔖
+### Edit a product view   🔖
 <!-- ToDo -->
 
 ### Future and more advanced topics
