@@ -1,8 +1,12 @@
 # API Excercise Project (AEP)
 
-This is created as a project idea for you to start working on a "real" Restful API - although it's a "classical basic e-commerce" you will get your tasks structured as good as possible and in a way that they can come to you from your employer/team.
+This is created as a project idea for you to start working on a "real" Restful API - it's a "classical basic e-commerce" and you will get your tasks structured as good as possible and in a way that they can come to you from your employer/team. Some of the things here maybe will not make the most sense from a "feature" stand point, but are aimed to make you think and find solutions for your tasks. This is made completely and only for learning purposes.
 
-It's completely up to you what kind of language or framework to use. You will see your tasks descibed in a universal way, so that they're applicable to any setup you decide to use. 
+The best way for going through this project is with a mentor or a friend, who can overview your progress, privde feedback and check your code via Pull/Merge-requests (as described in the next topic - Workflow). But if you don't have such support - don't worry, the provided Frontend application (Coming soon) has a mocking mode, where you can see how the app works and even can try to reverse engineer the desired outcome.
+
+It's up to you what kind of language or framework to use. You will see your tasks descibed in a universal way, so that they're applicable to any setup you decide to use.
+
+As you will be developing a REST API a very helpfull read would be this article [Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/#h-allow-filtering-sorting-and-pagination) and anything else to help you on your learning path. The tasks here are simply that - tasks to be done and completed, the rest of your searching and learning you should do completely on your own!
 
 
 ## Workflow / Git
@@ -11,14 +15,17 @@ To keep this "real" you need to create your own repository in Github and work wi
 - [Intro to git feature branch workflow](https://www.youtube.com/watch?v=Lj_jAFwofLs)
 - [git feature branch example](https://www.youtube.com/watch?v=IfD3PwpOz7U)
 
+<br/>
 
 ## Data storage
 You need to save your data to a Database (DB) - working with local files or temprorary data will not work. You can select any DB service, although PostreSQL would be the optimal choice. You can even deploy your Postgres DB for FREE in Heroku [How to set up a free PostgreSQL database on Heroku](https://dev.to/prisma/how-to-setup-a-free-postgresql-database-on-heroku-1dc1) and even your whole project when it's ready.
 
+<br/>
 
 ## Data mocking / Dummy data
 As you will create multiple objects and entries, probably it will be a good idea to try and make your data to look as close to a real item as possible. You can use libraries like [py Faker](https://faker.readthedocs.io/en/master/) or [Faker.js](https://fakerjs.dev/) for generating texts and values, and [unsplash](https://unsplash.com/) for images, which also have a free API you can directly call.
 
+<br/>
 
 ## Project overview
 You will be creating the REST API for a e-commerce platform with any products (you can choose your topic - tech, clothes, etc. or just random products). We will be listing products, sorting them, using pagination, having details views, internal (authenticated) routes, etc. 
@@ -33,7 +40,7 @@ id  { INTEGER }
 imageURL    { STRING }
 name    { STRING }
 slug    { STRING }
-**Description** { STRING }
+description { TEXT | LONG STRING }
 createdDate { STRING }
 price   { FLOAT }
 promoPrice { FLOAT }
@@ -45,7 +52,7 @@ tags    { STRING ARRAY }
 
 -----------
 
-## Tasks / Stories
+## Tasks
 
 ### Home page    🛍️
 In this "epic" we will be working on the initial state of our catalog page - listing our products with all the basic information for our app.
@@ -53,7 +60,7 @@ In this "epic" we will be working on the initial state of our catalog page - lis
 
 #### 00 Products - Creating a product item
 **Description**
-As a user to see product I firstly need to create them. We need a `POST` call to a new endpoint `/products`, which can accept a json body/payload with field `name` and `price` (for now).
+As a user to see product I firstly need to create them. We need a `POST` call to a new endpoint `/products`, which can accept a json body/payload with field `name`, `description` and `price` (for now).
 
 ```
 {
