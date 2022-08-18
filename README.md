@@ -238,7 +238,6 @@ Now after we have categories, we need to connect a category to each existing and
 
 As a user I want to be able to filter and see product only assigned to a specific category. Your endpoint for getting the products `GET /products` should accept a query parameter `category`, which contains the **category's slug**. It should filter and limit the response product to only those assign to the sent category - example `/products?category=laptop`. This query parameter **should** work with other query parameters provided (like sorting).
 
-
 **Acceptance Criteria**
 - All existing and future products should have an assigned category slug
 - `GET /products` should accept and filter by a query parameter `category`
@@ -252,26 +251,77 @@ As a user I want to be able to filter and see product only assigned to a specifi
 
 
 ### [Epic] Tags   🔖
+Another feature we want to add to our products are tags - think of them as the hashtags of a social platform. The tags are just text-strings, that are open to the user to add and change. We don't have any requirements for them, they're just a set of words, selected and set to a product.
 
-
-
-To Do
-- [ ] tags
-- [ ] filtering - by tags, fetch all uniqly passed tags, filter by them
-- [ ] pagination
-
-<!-- ### Home page sorting
-
-### Home page search
- 
-### Home page filter
-### Category - name + slug
-#### 04 - Product category
+#### 11 Tags - Add a tag field to product
 **Description**
-Usually in shops we can gather products and this is done via a category - we want to add a new string field `category`, that will contain the category of the product. All products are equired to have a category.
+As a user I want to see and use the tags for our products. You need to add a new field `tags`, which is an array of strings. These tags inside the array can be a single or multiple words. 
 
-Acceptance criateria
+**Acceptance Criteria******
+- New `tags` field added to products
+    - `tags` is always returned by `GET products/`
+    - `tags` can be empty and return an empty array `[]`
+- At least 3 products have **each** 3 tags set (hint: you can use the same tag on multiple products)
 
-### Create a new product
 
-### Edit a product -->
+<br/>
+<br/>
+
+
+#### 12 Tags - Retrieving all tags
+**Description**
+We need to provide our Frontend application with a list of all used tags, so it can display these to the user and give him the opportunity to filter by them. We need a new endpoint `GET /tags`, which goes through all products' tags and returns all **unique** (no duplication of values) tags as an array.
+
+**Acceptance Criteria**
+- Create a new endpoint `GET /tags`
+  - Return an array of tags/strings
+  - The returned values should be unique (no duplication of tags)
+
+
+<br/>
+<br/>
+
+
+#### 11 Tags - Filtering products by tags
+**Description**
+After we have added tags to our products now we want to use them and filter our list of items. Your `GET /products` should handle a new query parameter called `tags`, which query can send **mutliple** values - example `/products?tags=summer,hot,sale` or `/products?tags=sale`. There are multiple ways of supporting multiple values in a query parameter ( [How to pass an array within a query string?](https://stackoverflow.com/questions/6243051/how-to-pass-an-array-within-a-query-string) ) - in our case the multiple values are separated by a comma `,`. This query parameter should work with the rest of our supported queries - `category` & `sort`
+
+**Acceptance Criteria**
+- `GET /products` should accept a new query parameter `tags`
+  - has to work with a single or multiple values
+  - has to work with the other queries `category` & `sort`
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+### [Epic] Search   🔖
+<!-- ToDo -->
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+### [Epic] Create a product view   🔖
+<!-- ToDo -->
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+### [Epic] Edit a product view   🔖
+<!-- ToDo -->
+
+### Future and more advanced topics
+- Sorting by multiple fields
+- Fuzzy search
+- Search (fuzzy) by multiple fields - like name, category and tags
