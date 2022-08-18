@@ -33,8 +33,8 @@ id  { INTEGER }
 imageURL    { STRING }
 name    { STRING }
 slug    { STRING }
-description { STRING }
-releaseDate { STRING }
+**Description** { STRING }
+createdDate { STRING }
 price   { FLOAT }
 promoPrice { FLOAT }
 promoPercentage { INT }
@@ -51,94 +51,162 @@ tags    { STRING ARRAY }
 In this "epic" we will be working on the initial state of our catalog page - listing our products with all the basic information for our app.
 
 
+#### 00 Products - Creating a product item
+**Description**
+As a user to see product I firstly need to create them. We need a `POST` call to a new endpoint `/products`, which can accept a json body/payload with field `name` and `price` (for now).
 
-#### **01 Products** - Get the initial products information
-Description
-As a user I want to see a basic information for our products listed on the home page. Our application awaits a `GET` response from `/products` route. We want to see multiple products with the fields for `name`, `slug`, `price` and `releaseDate`. The `releaseDate` should be formated on the server in format `DD.MM.YYYY` and returned as a string (exmp. `"24.12.2020"`).
+```
+{
+    name: "Example product name",
+    price: 15
+}
+```
 
-Acceptance Criteria
+After receiving the call you will need to add to your object couple of dynamic fields
+- `slug` - The `slug` ( [What is a "slug"](https://stackoverflow.com/questions/427102/what-is-a-slug-in-django) ) field should be **automatically** created based on the `name` field and has to be kebabCase (lowercase) like this:
+```
+name: Some example name
+slug: some-example-name
+```
+- `createdDate` - date of creating the element. This can be a simple date element, no Date-Time needed.
+
+**Acceptance Criteria**
+- Create a `POST` request for `/products`
+- Can accept a json body
+- Creates `slug` and `createdDate` fields
+
+
+<br/>
+<br/>
+
+
+#### 01 Products - Get the initial products information
+**Description**
+As a user I want to see a basic information for our products listed on the home page. Our application awaits a `GET` response from `/products` route. We want to see multiple products with the fields for `name`, `slug`, `price` and `createdDate`. 
+
+The `createdDate` should be formated on the server in format `DD.MM.YYYY` and returned as a string (exmp. `"24.12.2020"`).
+
+The `slug` ( [What is a "slug"](https://stackoverflow.com/questions/427102/what-is-a-slug-in-django) ) field should be **automatically** created based on the `name` field and has to be lowercased with dashes (kebabCase) like this:
+
+```
+name: Some example name
+slug: some-example-name
+```
+
+**Acceptance Criteria**
 - We have a dedicated `GET` endpoint for `/products`
 - We receive all decribed fields
-- `releaseDate` is formated as `DD.MM.YYYY`
+- `createdDate` is formated as `DD.MM.YYYY`
 
 
+<br/>
+<br/>
 
-#### **02 Product **- add image url
-Description
-After we have our basic product information on our page, we want to also see the product image and know what we actually are looking at. You need to provide a new field `imageURL` to the existing `GET /products` for each item you return. This field returns a **url** to an image. You should connect to Unsplash's API and fetch a image ul for each product - it can be completely random every time or a specific image.
 
-Acceptance Criteria
+#### 02 Product - add image url
+**Description**
+After we have our basic product information on our page, we want to also see the product image and know what we actually are looking at. You need to provide a new field `imageURL` to the existing `GET /products` for each item you return. This field returns a url to an image. You should connect to Unsplash's API and fetch a image ul for each product - it can be completely random every time or a specific image.
+
+**Acceptance Criteria**
 - `imageURL` is accessible in the `GET /products`
 - Connect successfully to unsplash API
 - Receive an image url from unsplash API
 
 
+<br/>
+<br/>
 
-#### **03 Product** - add price and promotion
-Description
+
+#### 03 Product - add price and promotion
+**Description**
 Often we would like to give a promotional price for a specific product, that's when we're using the `promoPrice` and `promoPercentage` fields. `promoPrice` should always be smaller than the normal `price` and you need your calculate `promoPercentage` based on the `promoPrice` vs. `price` and always return it as a Int, not a Flota - think about posibble rounding of the number.
 
-Acceptance Criteria
+**Acceptance Criteria**
 - At least 3 products have a promotional price set
 - `promoPrice` and `promoPercentage` are added as fields to all products for `GET /products`
 - `promoPercentage` is calculated on the server and always an Integer
 
 
+<br/>
+<br/>
+<br/>
+<br/>
 
 
 ### [Epic] Sorting  🔽
 After we have provided our products to the page, now we want to be able to work with them a little bit easier - sorting their order by their name, release, price, etc.
 
 
-#### **04 Sorting** - name ASC/DESC
-Description
+#### 04 Sorting - name ASC/DESC
+**Description**
 We want to be able to receive the list of products by `GET /products` in a specific order - sorted by the `name` field either ASC or DESC. Your API endpoint will receive a [query parameter](https://rapidapi.com/blog/api-glossary/parameters/query/#:~:text=What%20are%20API%20Query%20Parameters,on%20the%20data%20being%20delivered.) called `sort`. This query parameter will be constructed like `sort=name:ASC` or `sort=name:DESC` (exmp. `GET /products?sort=name:ASC`). 
 
 This query parameter is not required, so if it's not sent, then return the products as you did until now.
 
-Acceptance criteria
+**Acceptance Criteria**
 - `GET /products` can accept a query parameter `sort`
 - The endpoint can work with `sort=name:ASC` or `sort=name:DESC`
 - When provided with one of the two query options, the endpoint should return the orders sorted in a specific way.
 
 
+<br/>
+<br/>
 
-#### **05 Sorting **- name releaseDate ASC/DESC
-Description
-Now we want to expand the sorting experience we have and add a new sorting option `releaseDate`. This query parameter will be constructed like `sort=releaseDate:ASC` or `sort=releaseDate:DESC` (exmp. `GET /products?sort=releaseDate:ASC`).
 
-Acceptance criteria
-- The endpoint can work with `sort=releaseDate:ASC` or `sort=releaseDate:DESC`
+#### 05 Sorting - name createdDate ASC/DESC
+**Description**
+Now we want to expand the sorting experience we have and add a new sorting option `createdDate`. This query parameter will be constructed like `sort=createdDate:ASC` or `sort=createdDate:DESC` (exmp. `GET /products?sort=createdDate:ASC`).
+
+**Acceptance Criteria**
+- The endpoint can work with `sort=createdDate:ASC` or `sort=createdDate:DESC`
 - When provided with one of the two query options, the endpoint should return the orders sorted in a specific way.
 
 
+<br/>
+<br/>
 
-#### **06 Sorting** - puchases ASC/DESC
-Description
+
+#### 06 Sorting - puchases ASC/DESC
+**Description**
 Now we want to expand the sorting experience we have and add a new sorting option `puchases`. This query parameter will be constructed like `sort=puchases:ASC` or `sort=puchases:DESC` (exmp. `GET /products?sort=puchases:ASC`).
 
 This is a new field `puchases` (Integer) for our product object - it's a required to be created for every existing and future product. The default value of the field should be a `0`. You don't need to send it to the frontend app, as it's not using this value. Add a `puchases` with a value bigger than 0 for at least 3 of the existing products.
 
-Acceptance criteria
+**Acceptance Criteria**
 - Add a new field `purchases` to the product object
-- The endpoint can work with `sort=releaseDate:ASC` or `sort=releaseDate:DESC`
+- The endpoint can work with `sort=createdDate:ASC` or `sort=createdDate:DESC`
 - When provided with one of the two query options, the endpoint should return the orders sorted in a specific way.
 
 
+<br/>
+<br/>
 
-#### **07 Sorting** - price ASC/DESC
-Description
+
+#### 07 Sorting - price ASC/DESC
+**Description**
 Now we want to expand the sorting experience we have and add a new sorting option `price`. This query parameter will be constructed like `sort=price:ASC` or `sort=price:DESC` (exmp. `GET /products?sort=price:ASC`).
 
 As we support 2 types of prices `price` & `promoPrice` when you're sorting, if a product has a `promoPrice` you should sort it by this field and not `price`! Having a `promoPrice`, means that the "normal" `price` is not taken into consideration and we're working always with the promotion.
 
-Acceptance criteria
+**Acceptance Criteria**
 - The endpoint can work with `sort=price:ASC` or `sort=price:DESC`
 - Sorts correctly products with or without a `promoPrice`
 - When provided with one of the two query options, the endpoint should return the orders sorted in a specific way.
 
 
+<br/>
+<br/>
+<br/>
+<br/>
+
+
 ### [Epic] Categories   🏷️
+
+
+<br/>
+<br/>
+<br/>
+<br/>
 
 
 ### [Epic] Tags   🔖
@@ -146,10 +214,12 @@ Acceptance criteria
 
 
 To Do
-- [] categories
-- [] tags
-- [] filtering - by category, create new endpoint for category (id, name, slug)
-- [] filtering - by tags, fetch all uniqly passed tags, filter by them
+- [ ] categories
+- [ ] tags
+- [ ] filtering - by category, create new endpoint for category (id, name, slug)
+- [ ] filtering - by tags, fetch all uniqly passed tags, filter by them
+- [ ] pagination
+- [ ] 
 
 <!-- ### Home page sorting
 
@@ -158,7 +228,7 @@ To Do
 ### Home page filter
 ### Category - name + slug
 #### 04 - Product category
-Description
+**Description**
 Usually in shops we can gather products and this is done via a category - we want to add a new string field `category`, that will contain the category of the product. All products are equired to have a category.
 
 Acceptance criateria
