@@ -201,6 +201,48 @@ As we support 2 types of prices `price` & `promoPrice` when you're sorting, if a
 
 
 ### [Epic] Categories   🏷️
+Usually in shops we can gather products and this is done via a category - we will be using this later on for filtering, grouping, etc. To be able to wok with the categories in the best way possible we'll create a new object and endpoint for them, after which we will connect them with our products.
+
+#### 08 Categories - Create a category
+**Description**
+We want to start with creating a new category. The category object should contain these fields:
+```
+id
+name
+slug
+```
+
+When creating a new category (`POST /categories`) you should receive a json body with the `name` field and create the `slug` automatically like for the `POST /products` endpoint. 
+
+**Acceptance Criteria**
+- Create a new endpoint `POST /categories`
+- Create automatically `slug` field
+- Create at least 3 categories
+
+
+#### 9 Categories - Listing the categories
+**Description**
+We want to be able to list our categories as options in our application. To do so we need a new endpoint `GET /categories`, which returns all existing categories - the needed fields are `name` and `slug`.
+
+**Acceptance Criteria**
+- Create a new `GET /categories` endpoint
+
+
+<br/>
+<br/>
+
+
+#### 10 Categories - Filter products by category
+**Description**
+Now after we have categories, we need to connect a category to each existing and future product. Use the `slug` of the category for the `category` field inside a product. Later on the fronten app will show these categories as filtering option. After this is done we can make the next step and perform a filtering on a category.
+
+As a user I want to be able to filter and see product only assigned to a specific category. Your endpoint for getting the products `GET /products` should accept a query parameter `category`, which contains the **category's slug**. It should filter and limit the response product to only those assign to the sent category - example `/products?category=laptop`. This query parameter **should** work with other query parameters provided (like sorting).
+
+
+**Acceptance Criteria**
+- All existing and future products should have an assigned category slug
+- `GET /products` should accept and filter by a query parameter `category`
+- `category` query parameter has to work with `sorting` query
 
 
 <br/>
@@ -214,12 +256,9 @@ As we support 2 types of prices `price` & `promoPrice` when you're sorting, if a
 
 
 To Do
-- [ ] categories
 - [ ] tags
-- [ ] filtering - by category, create new endpoint for category (id, name, slug)
 - [ ] filtering - by tags, fetch all uniqly passed tags, filter by them
 - [ ] pagination
-- [ ] 
 
 <!-- ### Home page sorting
 
