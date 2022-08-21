@@ -18,7 +18,7 @@ To keep this "real" you need to create your own repository in Github and work wi
 <br/>
 
 ## Data storage
-You need to save your data to a Database (DB) - working with local files or temprorary data will not work. You can select any DB service, although PostreSQL would be the optimal choice. You can even deploy your Postgres DB for FREE in Heroku [How to set up a free PostgreSQL database on Heroku](https://dev.to/prisma/how-to-setup-a-free-postgresql-database-on-heroku-1dc1) and even your whole project when it's ready.
+You need to save your data to a Database (DB) - working with local files or temprorary data will not work. You can select any DB service, although PostreSQL would be the optimal choice. You can even deploy your Postgres DB for FREE in Heroku [How to set up a free PostgreSQL database on Heroku](https://dev.to/prisma/how-to-setup-a-free-postgresql-database-on-heroku-1dc1) and even your whole project when it's ready. Another resource for PostgreSQL/DB you can use - [Learn PostgreSQL Tutorial - Full Course for Beginners](https://www.youtube.com/watch?v=qw--VYLpxG4).
 
 <br/>
 
@@ -65,6 +65,7 @@ As a user to see product I firstly need to create them. We need a `POST` call to
 ```
 {
     name: "Example product name",
+    description: "Example description lorem ipsuim"
     price: 15
 }
 ```
@@ -89,20 +90,14 @@ slug: some-example-name
 
 #### 01 Products - Get the initial products information
 **Description**
-As a user I want to see a basic information for our products listed on the home page. Our application awaits a `GET` response from `/products` route. We want to see multiple products with the fields for `name`, `slug`, `price` and `createdDate`. 
+As a user I want to see a basic information for our products listed on the home page. Our application awaits a `GET` response from `/products` route. We want to see multiple products, which contains the fields for `name`, `slug`, `price` and `createdDate` (this is what your endpoint should return). 
 
 The `createdDate` should be formated on the server in format `DD.MM.YYYY` and returned as a string (exmp. `"24.12.2020"`).
 
-The `slug` ( [What is a "slug"](https://stackoverflow.com/questions/427102/what-is-a-slug-in-django) ) field should be **automatically** created based on the `name` field and has to be lowercased with dashes (kebabCase) like this:
-
-```
-name: Some example name
-slug: some-example-name
-```
-
 **Acceptance Criteria**
 - We have a dedicated `GET` endpoint for `/products`
-- We receive all decribed fields
+  - Returns an array/list of products
+  - Every product object should have `name`, `slug`, `price` and `createdDate`
 - `createdDate` is formated as `DD.MM.YYYY`
 
 
@@ -115,7 +110,7 @@ slug: some-example-name
 After we have our basic product information on our page, we want to also see the product image and know what we actually are looking at. You need to provide a new field `imageURL` to the existing `GET /products` for each item you return. This field returns a url to an image. You should connect to Unsplash's API and fetch a image ul for each product - it can be completely random every time or a specific image.
 
 **Acceptance Criteria**
-- `imageURL` is accessible in the `GET /products`
+- Every product returned by `GET /products` should contain the new field `imageURL`
 - Connect successfully to unsplash API
 - Receive an image url from unsplash API
 
@@ -126,11 +121,11 @@ After we have our basic product information on our page, we want to also see the
 
 #### 03 Product - add price and promotion
 **Description**
-Often we would like to give a promotional price for a specific product, that's when we're using the `promoPrice` and `promoPercentage` fields. `promoPrice` should always be smaller than the normal `price` and you need your calculate `promoPercentage` based on the `promoPrice` vs. `price` and always return it as a Int, not a Flota - think about posibble rounding of the number.
+Often we would like to give a promotional price for a specific product, that's when we're using the `promoPrice` and `promoPercentage` fields - you need to add this both to your model in the server and to the response to our app. `promoPrice` should always be smaller than the normal `price` and you need your calculate `promoPercentage` based on the `promoPrice` vs. `price` and always return it as a Int, not a Flota - think about posibble rounding of the number.
 
 **Acceptance Criteria**
 - At least 3 products have a promotional price set
-- `promoPrice` and `promoPercentage` are added as fields to all products for `GET /products`
+- Every product returned by `GET /products` should contain the new fields `promoPrice` and `promoPercentage`
 - `promoPercentage` is calculated on the server and always an Integer
 
 
@@ -223,6 +218,7 @@ When creating a new category (`POST /categories`) you should receive a json body
 
 **Acceptance Criteria**
 - Create a new endpoint `POST /categories`
+  - It should accept a `name` field as a json payload - `{ name: 'Example category' }`
 - Create automatically `slug` field
 - Create at least 3 categories
 
@@ -233,6 +229,8 @@ We want to be able to list our categories as options in our application. To do s
 
 **Acceptance Criteria**
 - Create a new `GET /categories` endpoint
+  - Should return an array of all categories
+  - Each category should have fields `name` & `slug`
 
 
 <br/>
@@ -243,12 +241,12 @@ We want to be able to list our categories as options in our application. To do s
 **Description**
 Now after we have categories, we need to connect a category to each existing and future product. Use the `slug` of the category for the `category` field inside a product. Later on the fronten app will show these categories as filtering option. After this is done we can make the next step and perform a filtering on a category.
 
-As a user I want to be able to filter and see product only assigned to a specific category. Your endpoint for getting the products `GET /products` should accept a query parameter `category`, which contains the **category's slug**. It should filter and limit the response product to only those assign to the sent category - example `/products?category=laptop`. This query parameter **should** work with other query parameters provided (like sorting).
+As a user I want to be able to filter and see product only assigned to a specific category. Your endpoint for getting the products `GET /products` should accept a query parameter `category`, which contains the **category's slug**. It should filter and limit the response product to only those assign to the sent category - example `/products?category=laptop` returns only products that contain `category: laptop`. This query parameter **should** work with other query parameters provided (like sorting).
 
 **Acceptance Criteria**
 - All existing and future products should have an assigned category slug
 - `GET /products` should accept and filter by a query parameter `category`
-- `category` query parameter has to work with `sorting` query
+- The new query should work when used with the previously supported queries
 
 
 <br/>
@@ -258,16 +256,16 @@ As a user I want to be able to filter and see product only assigned to a specifi
 
 
 ### Tags   🔖
-Another feature we want to add to our products are tags - think of them as the hashtags of a social platform. The tags are just text-strings, that are open to the user to add and change. We don't have any requirements for them, they're just a set of words, selected and set to a product.
+Another feature we want to add to our products are tags - think of them as the hashtags used in a social platform. The tags are just text-strings, that are open to the user to add and change. We don't have any requirements for them, they're just a set of words, selected and set to a product.
 
 #### 11 Tags - Add a tag field to product
 **Description**
 As a user I want to see and use the tags for our products. You need to add a new field `tags`, which is an array of strings. These tags inside the array can be a single or multiple words. 
 
-**Acceptance Criteria******
+**Acceptance Criteria**
 - New `tags` field added to products
     - `tags` is always returned by `GET products/`
-    - `tags` can be empty and return an empty array `[]`
+    - `tags` can be empty and then is returned as empty array `[]`
 - At least 3 products have **each** 3 tags set (hint: you can use the same tag on multiple products)
 
 
@@ -281,7 +279,7 @@ We need to provide our Frontend application with a list of all used tags, so it 
 
 **Acceptance Criteria**
 - Create a new endpoint `GET /tags`
-  - Return an array of tags/strings
+  - Return an array of tags (strings)
   - The returned values should be unique (no duplication of tags)
 
 
@@ -296,7 +294,7 @@ After we have added tags to our products now we want to use them and filter our 
 **Acceptance Criteria**
 - `GET /products` should accept a new query parameter `tags`
   - has to work with a single or multiple values
-  - has to work with the other queries `category` & `sort`
+  - The new query should work when used with the previously supported queries
 
 
 <br/>
@@ -327,7 +325,7 @@ Your `GET /products` should handle a new query parameter called `search` and wil
 
 
 ### Pagination  🔖
-<!-- ToDo -->
+
 #### 13 Pagination
 **Description**
 Often you will work with way too many items, lets say over 1000 products - does it makes sense to send all of them as a response? Almost definetely not, that's why we should implement a pagination logic. You need to restructure your `GET /products` and return an additional object containing info about the current payload
