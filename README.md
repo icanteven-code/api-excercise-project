@@ -331,10 +331,19 @@ Currently our payload is a simple array of products and there's no available pla
 <br/>
 <br/>
 
+
+#### 14 Load data for your endpoints
+**Description**
+We want to imitate a real case scenario as much as possible, so you need to think of a way to **automate** the process of filling your database with products. You can use a library (like Faker, described in the beginning) or other existing services or APIs. 
+
+**Acceptance Criateria**
+- Fill the DB with 100 products with somewhat real information
+
 ### Edit a product view   🔖
 <!-- ToDo -->
 
 ### Future and more advanced topics
+- Unit testing (at least 70-80% coverage)
 - Sorting by multiple fields
 - Fuzzy search
 - Search (fuzzy) by multiple fields - like name, category and tags
